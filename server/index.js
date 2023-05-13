@@ -12,7 +12,12 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js"
 import userRoutes from "./routes/user.js"
 
-import { register } from "./controllers/auth";
+import { register } from "./controllers/auth.js";
+import { verifyToken } from "./middleware/auth.js";
+import { createPost } from "./controllers/post.js";
+import User from "./models/User.js";
+import Post from "./models/Post.js";
+import { posts, users } from "./fakeData/index.js";
 
 
 
@@ -48,27 +53,35 @@ const upload = multer({ storage });
 
 
 // Routes with file
-
 app.post("/auth/register", upload.single("picture"), register);
+app.post("/posts", verifyToken, upload.single("picture"), createPost)
 
 
 //Routes
-app.use("/auth",authRoutes); 
+app.use("/auth", authRoutes);
 
 
 //USER ROUTES --> 
-
-app.use("/users" , userRoutes)
+app.use("/users", userRoutes)
 
 
 //MONGOOSE SETUP
-const PORT = process.env.PORT || 6001
+const PORT = process.env.PORT || 6001;
+
+
+
 
 mongoose.connect(process.env.MONGO_DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
     app.listen(PORT, () => console.log(`Server Port : ${PORT}`));
+
+
+    //injecting manually fakeData
+    // User.insertMany(users)
+    // Post.insertMany(posts)
+
 }).catch((error) => console.log(error, "did not connect"))
 
 

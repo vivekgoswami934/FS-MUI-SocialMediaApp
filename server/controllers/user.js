@@ -1,4 +1,4 @@
-import User from "../models/User"
+import User from "../models/User.js"
 
 
 
@@ -6,7 +6,6 @@ import User from "../models/User"
 export const getUser = async () => {
 
     try {
-
         const { id } = req.params;
 
         const user = await User.findById(id)
@@ -38,7 +37,7 @@ export const getUserFriends = async () => {
             }
         )
 
-        res.status(404).json({message : err.message});
+        res.status(404).json({ message: err.message });
 
 
     } catch (err) {
@@ -51,18 +50,17 @@ export const getUserFriends = async () => {
 
 
 //update
-export const addRemoveFriend = async (req,res) => {
-    try{
-
-        const {id , friendId} = req.params ; 
+export const addRemoveFriend = async (req, res) => {
+    try {
+        const { id, friendId } = req.params;
 
         const user = await User.findById(id);
         const friend = await User.findById(friendId)
 
-        if(user.friends.includes(friendId)){
+        if (user.friends.includes(friendId)) {
             user.friends = user.friends.filter(id => id !== friendId)
             friend.friends = friend.friends.filter(ids => ids !== id)
-        }else{
+        } else {
             user.friends.push(friendId);
             friend.friends.push(id);
         }
@@ -81,11 +79,11 @@ export const addRemoveFriend = async (req,res) => {
             }
         )
 
-
         res.status(200).json(formattedFriends);
 
+    } catch (err) {
 
-    }catch(err){
+        
 
     }
 }

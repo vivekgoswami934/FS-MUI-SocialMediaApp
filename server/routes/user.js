@@ -1,8 +1,5 @@
 import express from "express"
 
-
-import express from "express";
-
 import {getUser,getUserFriends,addRemoveFriend} from "../controllers/user.js";
 
 import { verifyToken } from "../middleware/auth.js";
@@ -22,3 +19,5 @@ router.get("/:id/friends" , verifyToken , getUserFriends)
 
 router.patch("/:id/:friendsId" , verifyToken , addRemoveFriend)
 
+
+export default router;
